@@ -7,24 +7,33 @@
     <style>
         #filters{
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 1rem 0;
+            scrollbar-width: none;
+        }
+
+        #filters::-webkit-scrollbar{
+            display: none;
         }
 
         .filter{
+            flex: 0 0 auto;
             text-align: center;
             margin-right: 2rem;
-            margin-top: 2rem;
             opacity: 0.7;
         }
 
         .filter:hover{
             opacity: 1;
             cursor: pointer;
+        }
 
-            .filter p{
-                font-size: 0.8rem;
-            }
+        .filter p{
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
         }
 
         .tax-info{
@@ -32,13 +41,15 @@
         }
 
         .tax-toggle{
+            flex: 0 0 auto;
             border: 1px solid black;
             border-radius: 1rem;
             height: 3.25rem;
-            padding: 1rem;
-            margin-left: 2rem;
+            padding: 0 1rem;
+            margin-left: auto;
             display: flex;
             align-items: center;
+            white-space: nowrap;
         }
     </style>
 
