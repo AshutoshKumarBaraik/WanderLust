@@ -104,3 +104,16 @@ module.exports.destroyListing = async(req,res)=>{
     req.flash("success","New Deleted!");
     res.redirect("/listings");
 };
+
+module.exports.renderBookingForm = async (req, res) => {
+    let { id } = req.params;
+
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+        req.flash("error", "Listing not found!");
+        return res.redirect("/listings");
+    }
+
+    res.render("listings/booking.ejs", { listing });
+};

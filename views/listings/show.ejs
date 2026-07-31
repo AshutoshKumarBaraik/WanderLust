@@ -36,6 +36,14 @@
             </div>
             <% } %>
 
+            <% if(!currUser || !listing.owner._id.equals(currUser._id)){ %>
+            <form action="/listings/<%= listing._id %>/book" method="POST">
+                <button class="btn btn-danger mt-3">
+                    Book Now
+                </button>
+            </form>
+            <% } %>
+
             <div class="mb-3">
 
                 <hr>

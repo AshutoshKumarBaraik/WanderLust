@@ -13,17 +13,42 @@ const upload = multer({ storage });
 
 router.route("/")
     .get(wrapAsync(listingController.index))
-    .post(isLoggedIn, validateListing, upload.single("listing[image]"), wrapAsync(listingController.createListing));
+    .post(
+    isLoggedIn("You must be logged in to create a listing!"),
+    validateListing,
+    upload.single("listing[image]"),
+    wrapAsync(listingController.createListing)
+);
 
 
 //New route
-router.get("/new", isLoggedIn , listingController.renderNewForm);
+router.get(
+    "/new",
+    isLoggedIn("Please login to create a listing!"),
+    listingController.renderNewForm
+);
 
 router.route("/:id")
     .get( wrapAsync(listingController.showListings))
-    .put( isLoggedIn, isOwner, upload.single("listing[image]") ,validateListing, wrapAsync(listingController.updateListing))
-    .delete( isLoggedIn , isOwner ,wrapAsync(listingController.destroyListing));
+    .put(
+        isLoggedIn("Please login to update this listing!"),
+        isOwner,
+        upload.single("listing[image]"),
+        validateListing,
+        wrapAsync(listingController.updateListing)
+    )
+    .delete(
+        isLoggedIn("Please login to delete this listing!"),
+        isOwner,
+        wrapAsync(listingController.destroyListing)
+    );
 
+
+router.get(
+    "/:id/book",
+    isLoggedIn("You must be logged in to book this property!"),
+    wrapAsync(listingController.renderBookingForm)
+);
 
 //listing index route
 // router.get("/",wrapAsync(listingController.index));
@@ -37,7 +62,12 @@ router.route("/:id")
 // router.post("/", isLoggedIn , validateListing , wrapAsync(listingController.createListing));
 
 //Edit route
-router.get("/:id/edit", isLoggedIn , isOwner ,wrapAsync(listingController.renderEditForm));
+router.get(
+    "/:id/edit",
+    isLoggedIn("Please login to edit this listing!"),
+    isOwner,
+    wrapAsync(listingController.renderEditForm)
+);
 
 //update route
 // router.put("/:id", isLoggedIn, isOwner ,validateListing, wrapAsync(listingController.updateListing));
