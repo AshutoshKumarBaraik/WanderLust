@@ -52,11 +52,75 @@
                     ₹ <%= booking.totalPrice.toLocaleString("en-IN") %>
                 </p>
 
-                <a
-                    href="/listings/<%= booking.listing._id %>"
-                    class="btn btn-dark">
-                    View Property
-                </a>
+                <p class="card-text">
+                    <b>Status:</b>
+
+                    <% if(booking.status === "Upcoming"){ %>
+                    <span class="badge bg-primary">
+                        Upcoming
+                    </span>
+                    <% } %>
+
+                    <% if(booking.status === "Ongoing"){ %>
+                    <span class="badge bg-success">
+                        Ongoing
+                    </span>
+                    <% } %>
+
+                    <% if(booking.status === "Completed"){ %>
+                    <span class="badge bg-secondary">
+                        Completed
+                    </span>
+                    <% } %>
+
+                    <% if(booking.status === "Cancelled"){ %>
+                    <span class="badge bg-danger">
+                        Cancelled
+                    </span>
+                    <% } %>
+
+                </p>
+
+                <div class="d-flex gap-2 mt-3">
+
+                    <a
+                        href="/listings/<%= booking.listing._id %>"
+                        class="btn btn-dark flex-fill">
+                        View Property
+                    </a>
+
+                    <% if(booking.status === "Cancelled"){ %>
+
+                    <button
+                        class="btn btn-secondary flex-fill"
+                        disabled>
+                        Booking Cancelled
+                    </button>
+
+                    <% } else if(booking.status === "Completed"){ %>
+
+                    <button
+                        class="btn btn-secondary flex-fill"
+                        disabled>
+                        Completed
+                    </button>
+
+                    <% } else { %>
+
+                    <form
+                        action="/bookings/<%= booking._id %>?_method=PATCH"
+                        method="POST"
+                        class="flex-fill">
+
+                        <button class="btn btn-danger w-100">
+                            Cancel Booking
+                        </button>
+
+                    </form>
+
+                    <% } %>
+
+                </div>
 
             </div>
 

@@ -2,6 +2,7 @@ const Listing = require("../models/listing.js");
 const Booking = require("../models/booking.js");
 
 module.exports.createBooking = async (req, res) => {
+
     let { id } = req.params;
 
     const listing = await Listing.findById(id);
@@ -14,6 +15,25 @@ module.exports.createBooking = async (req, res) => {
 
     let totalPrice = listing.price * days;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkInDate = new Date(checkIn);
+    checkInDate.setHours(0, 0, 0, 0);
+
+    const checkOutDate = new Date(checkOut);
+    checkOutDate.setHours(0, 0, 0, 0);
+
+    let status;
+
+    if (today < checkInDate) {
+        status = "Upcoming";
+    } else if (today > checkOutDate) {
+        status = "Completed";
+    } else {
+        status = "Ongoing";
+    }
+
     const booking = new Booking({
         listing: id,
         user: req.user._id,
@@ -21,6 +41,7 @@ module.exports.createBooking = async (req, res) => {
         checkOut,
         guests,
         totalPrice,
+        status,
     });
 
     await booking.save();
@@ -36,7 +57,45 @@ module.exports.myBookings = async (req, res) => {
         user: req.user._id,
     }).populate("listing");
 
-    console.log(bookings);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let booking of bookings) {
+
+        if (booking.status === "Cancelled") {
+            continue;
+        }
+
+        booking.checkIn.setHours(0,0,0,0);
+        booking.checkOut.setHours(0,0,0,0);
+
+        if (today < booking.checkIn) {
+            booking.status = "Upcoming";
+        }
+        else if (today > booking.checkOut) {
+            booking.status = "Completed";
+        }
+        else {
+            booking.status = "Ongoing";
+        }
+
+        await booking.save();
+    }
 
     res.render("bookings/index.ejs", { bookings });
+};
+
+
+module.exports.cancelBooking = async (req, res) => {
+    let { bookingId } = req.params;
+
+    const booking = await Booking.findById(bookingId);
+
+    booking.status = "Cancelled";
+
+    await booking.save();
+
+    req.flash("success", "Booking cancelled successfully!");
+
+    res.redirect("/bookings");
 };

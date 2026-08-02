@@ -18,4 +18,10 @@ router.post(
     wrapAsync(bookingController.createBooking)
 );
 
+router.patch(
+    "/:bookingId",
+    isLoggedIn("Please login first!"),
+    wrapAsync(bookingController.cancelBooking)
+);
+
 module.exports = router;

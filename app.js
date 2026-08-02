@@ -108,13 +108,22 @@ app.use((req,res,next)=>{
 // });
 
 
+app.get("/", (req, res) => {
+    return res.redirect("/listings");
+});
 
+// Listing Routes
 app.use("/listings", listingRouter);
-app.use("/listings/:id/reviews", reviewRouter);
-app.use("/bookings", bookingRouter);
-app.use("/listings/:id/book", bookingRouter);
-app.use("/", userRouter);
 
+// Review Routes
+app.use("/listings/:id/reviews", reviewRouter);
+
+// Booking Routes
+app.use("/listings/:id/book", bookingRouter); // Create Booking
+app.use("/bookings", bookingRouter);          // My Bookings & Cancel Booking
+
+// User Routes
+app.use("/", userRouter);
 
 
 
