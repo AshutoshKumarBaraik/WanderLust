@@ -112,6 +112,14 @@ app.get("/", (req, res) => {
     return res.redirect("/listings");
 });
 
+// Debug middleware
+// app.use((req, res, next) => {
+//     console.log("METHOD:", req.method);
+//     console.log("URL:", req.originalUrl);
+//     console.log("CONTENT-TYPE:", req.headers["content-type"]);
+//     next();
+// });
+
 // Listing Routes
 app.use("/listings", listingRouter);
 

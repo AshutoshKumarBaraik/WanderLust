@@ -49,7 +49,7 @@
 
                 <p class="card-text">
                     <b>Total Price:</b>
-                    ₹ <%= booking.totalPrice.toLocaleString("en-IN") %>
+                    ₹ <%= (booking.totalPrice || 0).toLocaleString("en-IN") %>
                 </p>
 
                 <p class="card-text">

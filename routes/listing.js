@@ -5,6 +5,8 @@ const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 const { isLoggedIn, isOwner , validateListing }=require("../middleware.js");
 
+const bookingController = require("../controllers/bookings.js");
+
 const listingController = require("../controllers/listings.js");
 
 const multer  = require('multer');
@@ -43,6 +45,13 @@ router.route("/:id")
         wrapAsync(listingController.destroyListing)
     );
 
+
+
+router.post(
+    "/:id/book",
+    isLoggedIn("You must be logged in to book this property!"),
+    wrapAsync(bookingController.createBooking)
+);
 
 router.get(
     "/:id/book",

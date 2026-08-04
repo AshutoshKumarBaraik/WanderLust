@@ -12,10 +12,23 @@ const reviewController = require("../controllers/reviews.js");
 
 //reviews
 //Post Review route
-router.post("/", isLoggedIn ,validateReview, wrapAsync (reviewController.createReview));
-
+// router.post("/", isLoggedIn ,validateReview, wrapAsync (reviewController.createReview));
+router.post(
+    "/",
+    isLoggedIn("Please login to add a review!"),
+    validateReview,
+    wrapAsync(reviewController.createReview)
+);
 
 //Delete Review Route
-router.delete("/:reviewId", isLoggedIn, isReviewAuthor ,wrapAsync(reviewController.destroyReview));
+// router.delete("/:reviewId", isLoggedIn, isReviewAuthor ,wrapAsync(reviewController.destroyReview));
 
-module.exports=router;
+// module.exports=router;
+router.delete(
+    "/:reviewId",
+    isLoggedIn("Please login first!"),
+    isReviewAuthor,
+    wrapAsync(reviewController.destroyReview)
+);
+
+module.exports = router;

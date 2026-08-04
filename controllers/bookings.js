@@ -9,12 +9,6 @@ module.exports.createBooking = async (req, res) => {
 
     let { checkIn, checkOut, guests } = req.body.booking;
 
-    let days =
-        (new Date(checkOut) - new Date(checkIn))
-        / (1000 * 60 * 60 * 24);
-
-    let totalPrice = listing.price * days;
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -23,6 +17,22 @@ module.exports.createBooking = async (req, res) => {
 
     const checkOutDate = new Date(checkOut);
     checkOutDate.setHours(0, 0, 0, 0);
+
+    if (checkInDate < today) {
+        req.flash("error", "Check-in date cannot be before today!");
+        return res.redirect(`/listings/${id}`);
+    }
+
+    if (checkOutDate <= checkInDate) {
+        req.flash("error", "Checkout date must be after check-in date!");
+        return res.redirect(`/listings/${id}`);
+    }
+
+    let days =
+        (checkOutDate - checkInDate)
+        / (1000 * 60 * 60 * 24);
+
+    let totalPrice = listing.price * days;
 
     let status;
 
@@ -51,11 +61,46 @@ module.exports.createBooking = async (req, res) => {
     res.redirect(`/listings/${id}`);
 };
 
+// module.exports.myBookings = async (req, res) => {
+
+//     const bookings = await Booking.find({
+//         user: req.user._id,
+//     }).populate("listing");
+
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0);
+
+//     for (let booking of bookings) {
+
+//         if (booking.status === "Cancelled") {
+//             continue;
+//         }
+
+//         booking.checkIn.setHours(0,0,0,0);
+//         booking.checkOut.setHours(0,0,0,0);
+
+//         if (today < booking.checkIn) {
+//             booking.status = "Upcoming";
+//         }
+//         else if (today > booking.checkOut) {
+//             booking.status = "Completed";
+//         }
+//         else {
+//             booking.status = "Ongoing";
+//         }
+
+//         await booking.save();
+//     }
+
+//     res.render("bookings/index.ejs", { bookings });
+// };
 module.exports.myBookings = async (req, res) => {
 
     const bookings = await Booking.find({
         user: req.user._id,
     }).populate("listing");
+
+    // console.log(JSON.stringify(bookings, null, 2));
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -66,16 +111,14 @@ module.exports.myBookings = async (req, res) => {
             continue;
         }
 
-        booking.checkIn.setHours(0,0,0,0);
-        booking.checkOut.setHours(0,0,0,0);
+        booking.checkIn.setHours(0, 0, 0, 0);
+        booking.checkOut.setHours(0, 0, 0, 0);
 
         if (today < booking.checkIn) {
             booking.status = "Upcoming";
-        }
-        else if (today > booking.checkOut) {
+        } else if (today > booking.checkOut) {
             booking.status = "Completed";
-        }
-        else {
+        } else {
             booking.status = "Ongoing";
         }
 

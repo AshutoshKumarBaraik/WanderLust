@@ -46,15 +46,31 @@ module.exports.validateListing = (req,res,next)=>{
     }
 }
 
-module.exports.validateReview = (req,res,next)=>{
+// module.exports.validateReview = (req,res,next)=>{
+//     let { error } = reviewSchema.validate(req.body);
+//     if(error){
+//         let errMsg=error.details.map((el)=>el.message).join(",");
+//         throw new ExpressError(400,errMsg);
+//     }else{
+//         next();
+//     }
+// }
+
+module.exports.validateReview = (req, res, next) => {
+    console.log("Inside validateReview");
+    console.log(req.body);
+
     let { error } = reviewSchema.validate(req.body);
-    if(error){
-        let errMsg=error.details.map((el)=>el.message).join(",");
-        throw new ExpressError(400,errMsg);
-    }else{
-        next();
+
+    if (error) {
+        console.log(error);
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, errMsg);
     }
-}
+
+    console.log("Validation Passed");
+    next();
+};
 
 module.exports.isReviewAuthor = async (req, res, next) => {
     let { id, reviewId } = req.params;
