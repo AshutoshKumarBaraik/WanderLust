@@ -38,6 +38,36 @@
                         class="form-control">
                 </div>
 
+                <!-- ADDED HERE: Pre-checked Category Checkboxes -->
+                <div class="mb-3">
+                    <label class="form-label"><b>Categories</b> (Select all that
+                        apply)</label>
+                    <div class="row row-cols-2 row-cols-md-4 g-2">
+                        <% const categories = ["Trending", "Rooms",
+                        "Iconic Cities", "Mountains", "Castles",
+                        "Amazing Pools", "Camping", "Farms", "Arctic", "Domes",
+                        "Boats"]; %>
+                        <% for(let cat of categories) { %>
+                        <div class="col">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    name="listing[category][]"
+                                    value="<%= cat %>"
+                                    id="edit-cat-<%= cat %>"
+                                    <%=(listing.category &&
+                                    listing.category.includes(cat)) ? 'checked'
+                                    : '' %>
+                                >
+                                <label class="form-check-label"
+                                    for="edit-cat-<%= cat %>"><%= cat %></label>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="mb-3 col-md-4">
                         <label for="price" class="form-label">Price</label>

@@ -1,51 +1,65 @@
-const mongoose=require("mongoose");
-const Schema=mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const Review = require("./review.js");
 const { string } = require("joi");
 
-const listingSchema=new Schema({
-    title : {
-        type : String,
-        required : true,
-        },
-    description : String,
-    image: {
-        filename: {
-            type: String,
-            default: "listingimage",
-        },
-        url: {
-            type: String,
-            default: "https://media.istockphoto.com/id/1162974788/photo/tropical-paradise-beach-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=04kYVFaqgCJKqlzbBdGGdtQPbxXQc7j_bUngQHthiSg=",
-            set: (v) => (v === "" ? undefined : v),
-        },
+const listingSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: String,
+  image: {
+    filename: {
+      type: String,
+      default: "listingimage",
     },
-    price : Number,
-    location : String,
-    country : String,
-    reviews : [
-        {
-            type : Schema.Types.ObjectId,
-            ref : "Review",
-        },
+    url: {
+      type: String,
+      default:
+        "https://media.istockphoto.com/id/1162974788/photo/tropical-paradise-beach-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=04kYVFaqgCJKqlzbBdGGdtQPbxXQc7j_bUngQHthiSg=",
+      set: (v) => (v === "" ? undefined : v),
+    },
+  },
+  price: Number,
+  location: String,
+  country: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  // ADDED HERE: Array of Strings to support multiple selected categories
+  category: {
+    type: [String],
+    enum: [
+      "Trending",
+      "Rooms",
+      "Iconic Cities",
+      "Mountains",
+      "Castles",
+      "Amazing Pools",
+      "Camping",
+      "Farms",
+      "Arctic",
+      "Domes",
+      "Boats",
     ],
-    owner : {
-        type : Schema.Types.ObjectId,
-        ref : "User",
-    },
-    // category : {
-    //     type : string,
-    //     enum : ["Trending","Rooms","Iconic Cities","Mountains","Castles","Amazing Pools","Camping","Farms","Arctic"],
-    // },
+  },
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {
-    if (listing) {
-        await Review.deleteMany({
-            _id: { $in: listing.reviews }
-        });
-    }
+  if (listing) {
+    await Review.deleteMany({
+      _id: { $in: listing.reviews },
+    });
+  }
 });
 
-const Listing = mongoose.model("Listing",listingSchema);
-module.exports=Listing;
+const Listing = mongoose.model("Listing", listingSchema);
+module.exports = Listing;
