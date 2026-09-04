@@ -57,8 +57,8 @@ module.exports.validateListing = (req,res,next)=>{
 // }
 
 module.exports.validateReview = (req, res, next) => {
-    console.log("Inside validateReview");
-    console.log(req.body);
+    // console.log("Inside validateReview");
+    // console.log(req.body);
 
     let { error } = reviewSchema.validate(req.body);
 
@@ -68,7 +68,7 @@ module.exports.validateReview = (req, res, next) => {
         throw new ExpressError(400, errMsg);
     }
 
-    console.log("Validation Passed");
+    // console.log("Validation Passed");
     next();
 };
 
